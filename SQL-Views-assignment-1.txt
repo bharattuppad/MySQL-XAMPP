@@ -1,0 +1,123 @@
+Name: BHARAT TUPPAD
+ASSIGNMENT - 7
+VIEWS
+
+NOTE:
+In few places, data in column/row has been modified, inserted and/or updated as per the requirement of question
+-----------------------------------------------------------------------------------------------------------------------------------
+SOLUTION:
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------
+1.Table name: studinfo
+
+sid	Roll no	name	Percentage
+S15	25	Harry	98.7
+S23	27	Mac	99.2
+S42	35	Rohit	78.2
+S20	20	Pooja	83.33
+S18	35	Shree	87.88
+
+-----------------------------------------------------------------------------------------------------------------------------------
+1) Create a view name student_view containing sid,name and percentage.
+
+MariaDB [assignment_5]> create database assignment_7;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [assignment_5]> create table studinfo(sid varchar(20), roll_no int, name varchar(20), percentage float);
+Query OK, 0 rows affected (0.023 sec)
+
+MariaDB [assignment_5]> show tables;
++------------------------+
+| Tables_in_assignment_5 |
++------------------------+
+| em_det                 |
+| sal_variations         |
+| studinfo               |
++------------------------+
+3 rows in set (0.000 sec)
+
+MariaDB [assignment_5]> insert into studinfo values('S15',25,'Harry',98.7),('S23',27,'Mac',99.2),('S42',35,'Rohit',78.2),('S20',20,'Pooja',83.33),('S18',35,'Shree',87.88);
+Query OK, 5 rows affected (0.004 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [assignment_5]> select*from studinfo
+    -> ;
++------+---------+-------+------------+
+| sid  | roll_no | name  | percentage |
++------+---------+-------+------------+
+| S15  |      25 | Harry |       98.7 |
+| S23  |      27 | Mac   |       99.2 |
+| S42  |      35 | Rohit |       78.2 |
+| S20  |      20 | Pooja |      83.33 |
+| S18  |      35 | Shree |      87.88 |
++------+---------+-------+------------+
+5 rows in set (0.000 sec)
+
+MariaDB [assignment_5]> create view student_view as select sid,name,percentage from studinfo;
+Query OK, 0 rows affected (0.003 sec)
+
+MariaDB [assignment_5]> show tables;
++------------------------+
+| Tables_in_assignment_5 |
++------------------------+
+| em_det                 |
+| sal_variations         |
+| student_view           |
+| studinfo               |
++------------------------+
+4 rows in set (0.000 sec)
+
+MariaDB [assignment_5]> select*from studinfo;
++------+---------+-------+------------+
+| sid  | roll_no | name  | percentage |
++------+---------+-------+------------+
+| S15  |      25 | Harry |       98.7 |
+| S23  |      27 | Mac   |       99.2 |
+| S42  |      35 | Rohit |       78.2 |
+| S20  |      20 | Pooja |      83.33 |
+| S18  |      35 | Shree |      87.88 |
++------+---------+-------+------------+
+5 rows in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+2) Write query to sort all the data of student_view according to descending.
+
+MariaDB [assignment_5]> select*from student_view order by percentage desc;
++------+-------+------------+
+| sid  | name  | percentage |
++------+-------+------------+
+| S23  | Mac   |       99.2 |
+| S15  | Harry |       98.7 |
+| S18  | Shree |      87.88 |
+| S20  | Pooja |      83.33 |
+| S42  | Rohit |       78.2 |
++------+-------+------------+
+5 rows in set (0.001 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+3) Find the name of students from student_view securing highest percentage.
+
+MariaDB [assignment_5]> select name from student_view where percentage = (select max(percentage) from student_view);
++------+
+| name |
++------+
+| Mac  |
++------+
+1 row in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+4) Write a query to drop the student View.
+
+MariaDB [assignment_5]> drop view student_view;
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [assignment_5]> show tables;
++------------------------+
+| Tables_in_assignment_5 |
++------------------------+
+| em_det                 |
+| sal_variations         |
+| studinfo               |
++------------------------+
+3 rows in set (0.000 sec)

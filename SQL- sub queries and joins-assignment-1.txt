@@ -1,0 +1,405 @@
+Name: BHARAT TUPPAD
+ASSIGNMENT - 5 
+SUB QUERIES AND JOINS
+
+NOTE:
+In few places, data in column/row has been modified, inserted and/or updated as per the requirement of question
+-----------------------------------------------------------------------------------------------------------------------------------
+SOLUTION:
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------
+1. List the names and hire dates in format ('20/3/84') in dept 20.
+
+Setting environment for using XAMPP for Windows.
+Bharat@BHARAT e:\xampp
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.24-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| assignment_1       |
+| assignment_2       |
+| assignment_3       |
+| assignment_4       |
+| assignment_5       |
+| att_2              |
+| attempt_1          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
+| test1              |
++--------------------+
+13 rows in set (0.025 sec)
+
+MariaDB [(none)]> use assignment_5;
+Database changed
+MariaDB [assignment_5]> show tables;
++------------------------+
+| Tables_in_assignment_5 |
++------------------------+
+| em_det                 |
++------------------------+
+1 row in set (0.000 sec)
+
+MariaDB [assignment_5]> select*from em_det;
++------+---------+--------+--------+--------+------------+-------------+------------+
+| emid | name    | city   | salary | deptno | deptname   | designation | hiredate   |
++------+---------+--------+--------+--------+------------+-------------+------------+
+|    1 | aditi   | thane  |  30000 |     20 | hr         | jrhr        | 1996-05-12 |
+|    2 | john    | pune   |  40000 |     20 | hr         | srhr        | 1984-02-23 |
+|    3 | smith   | nagpur |  25000 |      4 | prodn      | manager     | 1987-06-09 |
+|    4 | ravi    | mumbai |  43000 |      4 | finance    | sranalyst   | 1958-07-02 |
+|    5 | riya    | nagpur |  38000 |     20 | BOD        | president   | 1994-06-01 |
+|    6 | tina    | mumbai |  25000 |     20 | finance    | jranalyst   | 2020-01-15 |
+|    7 | manisha | thane  |  25000 |      4 | operations | trainee     | 2012-12-22 |
+|    8 | james   | pune   |   5000 |      1 | mts        | wardboy     | 2010-07-17 |
++------+---------+--------+--------+--------+------------+-------------+------------+
+8 rows in set (0.037 sec)
+
+MariaDB [assignment_5]> select name as emp_name,date_format(hiredate, '%d / %m / %y') as date_of_hiring from em_det where emid in (select emid from em_det where deptno=20);
++----------+----------------+
+| emp_name | date_of_hiring |
++----------+----------------+
+| aditi    | 12 / 05 / 96   |
+| john     | 23 / 02 / 84   |
+| riya     | 01 / 06 / 94   |
+| tina     | 15 / 01 / 20   |
++----------+----------------+
+4 rows in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+2. How many months has the president worked for the company.
+
+MariaDB [assignment_5]> select designation,timestampdiff(month,hiredate,curdate()) as worked_in_months from em_det where emid = (select emid from em_det where designation='president');
++-------------+------------------+
+| designation | worked_in_months |
++-------------+------------------+
+| president   |              335 |
++-------------+------------------+
+1 row in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+3. List the names of all employees where hire date is in month of December.
+
+MariaDB [assignment_5]> select name from em_det where emid in (select emid from em_det where monthname(hiredate)='december');
++---------+
+| name    |
++---------+
+| manisha |
++---------+
+1 row in set (0.001 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+4. Find average annual salary per job in each department.
+
+MariaDB [assignment_5]> update em_det set annual_sal=(salary*12) where emid in (select emid from em_det where salary>0);
+Query OK, 8 rows affected (0.141 sec)
+Rows matched: 8  Changed: 8  Warnings: 0
+
+MariaDB [assignment_5]> select*from em_det;
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+| emid | name    | city   | salary | deptno | deptname   | designation | hiredate   | annual_sal |
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+|    1 | aditi   | thane  |  30000 |     20 | hr         | jrhr        | 1996-05-12 |     360000 |
+|    2 | john    | pune   |  40000 |     20 | hr         | srhr        | 1984-02-23 |     480000 |
+|    3 | smith   | nagpur |  25000 |      4 | prodn      | manager     | 1987-06-09 |     300000 |
+|    4 | ravi    | mumbai |  43000 |      4 | finance    | sranalyst   | 1958-07-02 |     516000 |
+|    5 | riya    | nagpur |  38000 |     20 | BOD        | president   | 1994-06-01 |     456000 |
+|    6 | tina    | mumbai |  25000 |     20 | finance    | jranalyst   | 2020-01-15 |     300000 |
+|    7 | manisha | thane  |  25000 |      4 | operations | trainee     | 2012-12-22 |     300000 |
+|    8 | james   | pune   |   5000 |      1 | mts        | wardboy     | 2010-07-17 |      60000 |
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+8 rows in set (0.000 sec)
+
+MariaDB [assignment_5]> select deptname,avg(annual_sal) from em_det where deptname in (select deptname from em_det where emid<9) group by deptname;
++------------+-----------------+
+| deptname   | avg(annual_sal) |
++------------+-----------------+
+| BOD        |     456000.0000 |
+| finance    |     408000.0000 |
+| hr         |     420000.0000 |
+| mts        |      60000.0000 |
+| operations |     300000.0000 |
+| prodn      |     300000.0000 |
++------------+-----------------+
+6 rows in set (0.003 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+5. Count number of employees in dept 30
+
+
+MariaDB [assignment_5]> update em_det set deptno=30 where emid=3;
+Query OK, 1 row affected (0.010 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_5]> update em_det set deptno=30 where emid=4;
+Query OK, 1 row affected (0.013 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_5]> select*from em_det;
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+| emid | name    | city   | salary | deptno | deptname   | designation | hiredate   | annual_sal |
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+|    1 | aditi   | thane  |  30000 |     20 | hr         | jrhr        | 1996-05-12 |     360000 |
+|    2 | john    | pune   |  40000 |     20 | hr         | srhr        | 1984-02-23 |     480000 |
+|    3 | smith   | nagpur |  25000 |     30 | prodn      | manager     | 1987-06-09 |     300000 |
+|    4 | ravi    | mumbai |  43000 |     30 | finance    | sranalyst   | 1958-07-02 |     516000 |
+|    5 | riya    | nagpur |  38000 |     20 | BOD        | president   | 1994-06-01 |     456000 |
+|    6 | tina    | mumbai |  25000 |     20 | finance    | jranalyst   | 2020-01-15 |     300000 |
+|    7 | manisha | thane  |  25000 |      4 | operations | trainee     | 2012-12-22 |     300000 |
+|    8 | james   | pune   |   5000 |      1 | mts        | wardboy     | 2010-07-17 |      60000 |
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+8 rows in set (0.000 sec)
+
+MariaDB [assignment_5]> select count(emid) as no_of_emp from em_det where emid in (select emid from em_det where deptno=30);
++-----------+
+| no_of_emp |
++-----------+
+|         2 |
++-----------+
+1 row in set (0.013 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+6. Compute average, minimum and maximum salaries of employees for each department
+
+MariaDB [assignment_5]> select max(salary), min(salary), avg(salary),deptname from em_det where emid in (select emid from em_det where salary>0) group by deptname;
++-------------+-------------+-------------+------------+
+| max(salary) | min(salary) | avg(salary) | deptname   |
++-------------+-------------+-------------+------------+
+|       38000 |       38000 |  38000.0000 | BOD        |
+|       43000 |       25000 |  34000.0000 | finance    |
+|       40000 |       30000 |  35000.0000 | hr         |
+|        5000 |        5000 |   5000.0000 | mts        |
+|       25000 |       25000 |  25000.0000 | operations |
+|       25000 |       25000 |  25000.0000 | prodn      |
++-------------+-------------+-------------+------------+
+6 rows in set (0.001 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+7. Display deptno's where more than two clerks are working
+
+MariaDB [assignment_5]> select*from em_det;
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+| emid | name    | city   | salary | deptno | deptname   | designation | hiredate   | annual_sal |
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+|    1 | aditi   | thane  |  30000 |     20 | hr         | clerk       | 1996-05-12 |     360000 |
+|    2 | john    | pune   |  40000 |     20 | hr         | clerk       | 1984-02-23 |     480000 |
+|    3 | smith   | nagpur |  25000 |     30 | prodn      | manager     | 1987-06-09 |     300000 |
+|    4 | ravi    | mumbai |  43000 |     30 | finance    | sranalyst   | 1958-07-02 |     516000 |
+|    5 | riya    | nagpur |  38000 |     20 | BOD        | president   | 1994-06-01 |     456000 |
+|    6 | tina    | mumbai |  25000 |     20 | finance    | jranalyst   | 2020-01-15 |     300000 |
+|    7 | manisha | thane  |  25000 |      4 | operations | trainee     | 2012-12-22 |     300000 |
+|    8 | james   | pune   |   5000 |     20 | hr         | clerk       | 2010-07-17 |      60000 |
++------+---------+--------+--------+--------+------------+-------------+------------+------------+
+8 rows in set (0.000 sec)
+
+MariaDB [assignment_5]> select deptno, count(designation) as no_of_clerks from em_det where designation in (select designation from em_det where designation='clerk') group by designation having count(designation)>2;
++--------+--------------+
+| deptno | no_of_clerks |
++--------+--------------+
+|     20 |            3 |
++--------+--------------+
+1 row in set (0.001 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+8. Who was the first employee hired in each department
+
+MariaDB [assignment_5]> select name,deptname,min(hiredate) as hired_first_in_dept from em_det where deptname in (select deptname from em_det) group by deptname;
++---------+------------+---------------------+
+| name    | deptname   | hired_first_in_dept |
++---------+------------+---------------------+
+| riya    | BOD        | 1994-06-01          |
+| ravi    | finance    | 1958-07-02          |
+| aditi   | hr         | 1984-02-23          |
+| manisha | operations | 2012-12-22          |
+| smith   | prodn      | 1987-06-09          |
++---------+------------+---------------------+
+5 rows in set (0.001 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+9. Show count of employees and their total sum of salary. Display only those jobs where minimum salary is greater than or equal to 3000
+
+MariaDB [assignment_5]> select count(name) as no_of_emp,sum(salary) as total_sal from em_det where emid in (select emid from em_det where salary>=3000);
++-----------+-----------+
+| no_of_emp | total_sal |
++-----------+-----------+
+|         8 |    231000 |
++-----------+-----------+
+1 row in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+10. Find out difference between highest and lowest salaries from emp table
+
+MariaDB [assignment_5]> select max(salary)-min(salary) as sal_diff from em_det;
++----------+
+| sal_diff |
++----------+
+|    38000 |
++----------+
+1 row in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+11. Find all departments which have more than 2 employees.
+
+MariaDB [assignment_5]> select deptname,count(designation) from em_det where designation in (select designation from em_det) group by designation having count(designation)>2;
++----------+--------------------+
+| deptname | count(designation) |
++----------+--------------------+
+| hr       |                  3 |
++----------+--------------------+
+1 row in set (0.001 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+12. Find the employees who earn more than the lowest salary in each department.
+
+MariaDB [assignment_5]> select name,salary,deptname from em_det where salary > (select min(salary) from em_det);
++---------+--------+------------+
+| name    | salary | deptname   |
++---------+--------+------------+
+| aditi   |  30000 | hr         |
+| john    |  40000 | hr         |
+| smith   |  25000 | prodn      |
+| ravi    |  43000 | finance    |
+| riya    |  38000 | BOD        |
+| tina    |  25000 | finance    |
+| manisha |  25000 | operations |
++---------+--------+------------+
+7 rows in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+13. Display employee who earn more than the lowest salary in department 30
+
+MariaDB [assignment_5]> select name, deptname from em_det where salary > (select min(salary) from em_det where deptno=30);
++-------+----------+
+| name  | deptname |
++-------+----------+
+| aditi | hr       |
+| john  | hr       |
+| ravi  | finance  |
+| riya  | BOD      |
++-------+----------+
+4 rows in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+14. Find employees who earn more than every employee in each department ordering to the department
+
+MariaDB [assignment_5]> select name,deptname,max(salary) from em_det where deptname in (select deptname from em_det) group by deptname;
++---------+------------+-------------+
+| name    | deptname   | max(salary) |
++---------+------------+-------------+
+| riya    | BOD        |       38000 |
+| ravi    | finance    |       43000 |
+| aditi   | hr         |       40000 |
+| manisha | operations |       25000 |
+| smith   | prodn      |       25000 |
++---------+------------+-------------+
+5 rows in set (0.001 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+15. Determine average salary of employees.
+
+MariaDB [assignment_5]> select avg(salary) as average_sal from em_det where deptname in (select deptname from em_det);
++-------------+
+| average_sal |
++-------------+
+|  28875.0000 |
++-------------+
+1 row in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+16. Find the job with highest average salary
+
+MariaDB [assignment_5]> select designation,avg(salary) from em_det where designation in (select designation from em_det) group by designation order by avg(salary) desc limit 1;
++-------------+-------------+
+| designation | avg(salary) |
++-------------+-------------+
+| sranalyst   |  43000.0000 |
++-------------+-------------+
+1 row in set (0.001 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+17. Display the name of job, hire date for employees whose salary is greater than the highest salary in any HR department
+
+MariaDB [assignment_5]> select designation, hiredate from em_det where salary > (select max(salary) from em_det where deptname='hr');
++-------------+------------+
+| designation | hiredate   |
++-------------+------------+
+| sranalyst   | 1958-07-02 |
++-------------+------------+
+1 row in set (0.001 sec)
+
+NOTE: qsn was modified from SALES dept to HR dept to match with the table
+-----------------------------------------------------------------------------------------------------------------------------------
+18. Find out all the jobs either in department 20 or where salary is greater than 3000.
+
+MariaDB [assignment_5]> select designation from em_det where salary>3000 or deptname in (select deptname from em_det where deptno=20);
++-------------+
+| designation |
++-------------+
+| clerk       |
+| clerk       |
+| manager     |
+| sranalyst   |
+| president   |
+| jranalyst   |
+| trainee     |
+| clerk       |
++-------------+
+8 rows in set (0.005 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+19. Find out the employees who earn the highest salary in each department.
+
+MariaDB [assignment_5]> select name,deptname, max(salary) as salary from em_det where deptname in (select deptname from em_det) group by deptname;
++---------+------------+--------+
+| name    | deptname   | salary |
++---------+------------+--------+
+| riya    | BOD        |  38000 |
+| ravi    | finance    |  43000 |
+| aditi   | hr         |  40000 |
+| manisha | operations |  25000 |
+| smith   | prodn      |  25000 |
++---------+------------+--------+
+5 rows in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+20. Display the employees who are doing the same job as ‘aditi’.
+
+MariaDB [assignment_5]> select name,deptname from em_det where deptname = (select deptname from em_det where name='aditi');
++-------+----------+
+| name  | deptname |
++-------+----------+
+| aditi | hr       |
+| john  | hr       |
+| james | hr       |
++-------+----------+
+3 rows in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------

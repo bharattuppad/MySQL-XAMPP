@@ -1,0 +1,163 @@
++----------------+-------------+------+-----+---------+-------+
+
+| Field          | Type        | Null | Key | Default | Extra |
+
++----------------+-------------+------+-----+---------+-------+
+
+| job_id         | int(11)     | YES  |     | NULL    |       |
+
+| job_title      | varchar(50) | YES  |     | NULL    |       |
+
+| job_min_salary | int(11)     | YES  |     | NULL    |       |
+
+| job_max_salary | int(11)     | YES  |     | NULL    |       |
+
++----------------+-------------+------+-----+---------+-------+
+
+
+
+1.Write a SQL query to insert 2 (rows) jobs in table with all values.
+
+2.Write a SQL query to insert 3 (rows) jobs in table with job_id, job_title only using single query.
+
+3.Write a SQL query to delete all the jobs those minimum salary is less than 20000.
+
+4.Write a SQL query to update all the column of table those value is null.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Answer with code:
+
+1)
+
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.24-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| assignment_1       |
+| att_2              |
+| attempt_1          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+8 rows in set (0.027 sec)
+
+MariaDB [(none)]> create database assignment_2;
+Query OK, 1 row affected (0.005 sec)
+
+MariaDB [(none)]> use assignment_2;
+Database changed
+MariaDB [assignment_2]> show tables;
+Empty set (0.000 sec)
+
+MariaDB [assignment_2]> create table jobs(job_id int, job_title varchar(50), job_min_salary int, job_max_salary int);
+Query OK, 0 rows affected (0.146 sec)
+
+MariaDB [assignment_2]> desc jobs;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| job_id         | int(11)     | YES  |     | NULL    |       |
+| job_title      | varchar(50) | YES  |     | NULL    |       |
+| job_min_salary | int(11)     | YES  |     | NULL    |       |
+| job_max_salary | int(11)     | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.011 sec)
+
+MariaDB [assignment_2]> insert into jobs values(5,'mts',5000,1000),(10,'Engr',22000,35000);
+Query OK, 2 rows affected (0.039 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [assignment_2]> select*from jobs;
++--------+-----------+----------------+----------------+
+| job_id | job_title | job_min_salary | job_max_salary |
++--------+-----------+----------------+----------------+
+|      5 | mts       |           5000 |           1000 |
+|     10 | Engr      |          22000 |          35000 |
++--------+-----------+----------------+----------------+
+2 rows in set (0.001 sec)
+-----------------------------------------------------------------------------------------------------------------------------------
+
+2)
+
+MariaDB [assignment_2]> insert into jobs values(15,'TL',null ,null ),(20,'GM',null ,null ),(25,'MD',null ,null );
+Query OK, 3 rows affected (0.004 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [assignment_2]> select*from jobs;
++--------+-----------+----------------+----------------+
+| job_id | job_title | job_min_salary | job_max_salary |
++--------+-----------+----------------+----------------+
+|      5 | mts       |           5000 |           1000 |
+|     10 | Engr      |          22000 |          35000 |
+|     15 | TL        |           NULL |           NULL |
+|     20 | GM        |           NULL |           NULL |
+|     25 | MD        |           NULL |           NULL |
++--------+-----------+----------------+----------------+
+5 rows in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+3)
+
+MariaDB [assignment_2]> delete from jobs where job_min_salary<20000;
+Query OK, 1 row affected (0.003 sec)
+
+MariaDB [assignment_2]> select*from jobs;
++--------+-----------+----------------+----------------+
+| job_id | job_title | job_min_salary | job_max_salary |
++--------+-----------+----------------+----------------+
+|     10 | Engr      |          22000 |          35000 |
+|     15 | TL        |           NULL |           NULL |
+|     20 | GM        |           NULL |           NULL |
+|     25 | MD        |           NULL |           NULL |
++--------+-----------+----------------+----------------+
+4 rows in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+4)
+
+MariaDB [assignment_2]> update jobs set job_min_salary=50000 where job_id in(15,20,25);
+Query OK, 3 rows affected (0.004 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+MariaDB [assignment_2]> select*from jobs;
++--------+-----------+----------------+----------------+
+| job_id | job_title | job_min_salary | job_max_salary |
++--------+-----------+----------------+----------------+
+|     10 | Engr      |          22000 |          35000 |
+|     15 | TL        |          50000 |           NULL |
+|     20 | GM        |          50000 |           NULL |
+|     25 | MD        |          50000 |           NULL |
++--------+-----------+----------------+----------------+
+4 rows in set (0.000 sec)
+
+MariaDB [assignment_2]> update jobs set job_max_salary=120000 where job_id in(15,20,25);
+Query OK, 3 rows affected (0.003 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+MariaDB [assignment_2]> select*from jobs;
++--------+-----------+----------------+----------------+
+| job_id | job_title | job_min_salary | job_max_salary |
++--------+-----------+----------------+----------------+
+|     10 | Engr      |          22000 |          35000 |
+|     15 | TL        |          50000 |         120000 |
+|     20 | GM        |          50000 |         120000 |
+|     25 | MD        |          50000 |         120000 |
++--------+-----------+----------------+----------------+
+4 rows in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------

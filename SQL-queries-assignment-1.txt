@@ -1,0 +1,456 @@
+Write the queries for
+
+1. Display name, job, salary, and annual salary of all employees.
+
+2. Display all the different job types.
+
+3. Display name and salary of all employees who are CLERK.
+
+4. Display the employee number, name, job title, salary and hire date of employees of department number 20 and hiredate as 1980-12-17.
+
+5. Display the department name and department number for departments with numbers greater than or equal to 20.
+
+6. Display the name, salary and commission of employees whose commission is greater than their salary.
+
+7. Display the name, job title and salary of everyone hired during 1983.
+
+8. Display the names of employees where salaries are less than 5500.
+
+9. Display the names and employee numbers of managers who earn more than 7500.
+
+10. Display the information about managers and the president from the EMP table,order by department number.
+
+11. Display all the employees whose name do not end with ‘S’
+
+12. Display all the employees whose name start with ‘C’.
+
+13. Display the name, job and department of employees whose name falls in the alphabetical range ‘C’ to ‘L’.
+
+14. Display the employee details working in department 20, 30 or 40.
+
+15. Display all the employees whose names start with ‘T’ and ends with ‘R’.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+SOLUTION:
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------
+1. Display name, job, salary, and annual salary of all employees.
+
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 11
+Server version: 10.4.24-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| assignment_1       |
+| assignment_2       |
+| assignment_3       |
+| att_2              |
+| attempt_1          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+10 rows in set (0.001 sec)
+
+MariaDB [(none)]> create database assignment_4;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> use assignment_4;
+Database changed
+MariaDB [assignment_4]> create table trx(name varchar(20), job varchar(20), salary int, annual_salary int);
+Query OK, 0 rows affected (0.027 sec)
+
+MariaDB [assignment_4]> desc trx;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| name          | varchar(20) | YES  |     | NULL    |       |
+| job           | varchar(20) | YES  |     | NULL    |       |
+| salary        | int(11)     | YES  |     | NULL    |       |
+| annual_salary | int(11)     | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+4 rows in set (0.006 sec)
+
+MariaDB [assignment_4]> insert into trx values('bharat','engr',50000,700000),('patlu','clerk',10000,140000),('chotu','mts',9800,125000),('raj','dgm',120000,1700000);
+Query OK, 4 rows affected (0.004 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [assignment_4]> select*from trx;
++--------+-------+--------+---------------+
+| name   | job   | salary | annual_salary |
++--------+-------+--------+---------------+
+| bharat | engr  |  50000 |        700000 |
+| patlu  | clerk |  10000 |        140000 |
+| chotu  | mts   |   9800 |        125000 |
+| raj    | dgm   | 120000 |       1700000 |
++--------+-------+--------+---------------+
+4 rows in set (0.000 sec)
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+2. Display all the different job types.
+
+MariaDB [assignment_4]> select job from trx;
++-------+
+| job   |
++-------+
+| engr  |
+| clerk |
+| mts   |
+| dgm   |
++-------+
+4 rows in set (0.000 sec)
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+3. Display name and salary of all employees who are CLERK.
+
+MariaDB [assignment_4]> select name,salary from trx where job='clerk';
++-------+--------+
+| name  | salary |
++-------+--------+
+| patlu |  10000 |
++-------+--------+
+1 row in set (0.004 sec)
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+4. Display the employee number, name, job title, salary and hire date of employees of department number 20 and hiredate as 1980-12-17.
+
+MariaDB [assignment_4]> alter table trx add emp_no int, add hire_date varchar(20),add dept_no int;
+Query OK, 0 rows affected (0.054 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [assignment_4]> desc trx;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| name          | varchar(20) | YES  |     | NULL    |       |
+| job           | varchar(20) | YES  |     | NULL    |       |
+| salary        | int(11)     | YES  |     | NULL    |       |
+| annual_salary | int(11)     | YES  |     | NULL    |       |
+| emp_no        | int(11)     | YES  |     | NULL    |       |
+| hire_date     | varchar(20) | YES  |     | NULL    |       |
+| dept_no       | int(11)     | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+7 rows in set (0.007 sec)
+
+MariaDB [assignment_4]> select*from trx;
++--------+-------+--------+---------------+--------+-----------+---------+
+| name   | job   | salary | annual_salary | emp_no | hire_date | dept_no |
++--------+-------+--------+---------------+--------+-----------+---------+
+| bharat | engr  |  50000 |        700000 |   NULL | NULL      |    NULL |
+| patlu  | clerk |  10000 |        140000 |   NULL | NULL      |    NULL |
+| chotu  | mts   |   9800 |        125000 |   NULL | NULL      |    NULL |
+| raj    | dgm   | 120000 |       1700000 |   NULL | NULL      |    NULL |
++--------+-------+--------+---------------+--------+-----------+---------+
+4 rows in set (0.000 sec)
+
+MariaDB [assignment_4]> update trx set emp_no=1,hire_date='1980-12-17',dept_no=20 where job='engr';
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> select*from trx;
++--------+-------+--------+---------------+--------+------------+---------+
+| name   | job   | salary | annual_salary | emp_no | hire_date  | dept_no |
++--------+-------+--------+---------------+--------+------------+---------+
+| bharat | engr  |  50000 |        700000 |      1 | 1980-12-17 |      20 |
+| patlu  | clerk |  10000 |        140000 |   NULL | NULL       |    NULL |
+| chotu  | mts   |   9800 |        125000 |   NULL | NULL       |    NULL |
+| raj    | dgm   | 120000 |       1700000 |   NULL | NULL       |    NULL |
++--------+-------+--------+---------------+--------+------------+---------+
+4 rows in set (0.000 sec)
+
+MariaDB [assignment_4]> update trx set emp_no=2,hire_date='1990-10-27',dept_no=15 where job='clerk';
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> update trx set emp_no=3,hire_date='2000-05-07',dept_no=10 where job='mts';
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> update trx set emp_no=4,hire_date='2005-05-12',dept_no=5 where job='dgm';
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> select*from trx;
++--------+-------+--------+---------------+--------+------------+---------+
+| name   | job   | salary | annual_salary | emp_no | hire_date  | dept_no |
++--------+-------+--------+---------------+--------+------------+---------+
+| bharat | engr  |  50000 |        700000 |      1 | 1980-12-17 |      20 |
+| patlu  | clerk |  10000 |        140000 |      2 | 1990-10-27 |      15 |
+| chotu  | mts   |   9800 |        125000 |      3 | 2000-05-07 |      10 |
+| raj    | dgm   | 120000 |       1700000 |      4 | 2005-05-12 |       5 |
++--------+-------+--------+---------------+--------+------------+---------+
+4 rows in set (0.000 sec)
+
+MariaDB [assignment_4]> select emp_no, name, job, salary, hire_date from trx where(dept_no=20 and hire_date='1980-12-17');
++--------+--------+------+--------+------------+
+| emp_no | name   | job  | salary | hire_date  |
++--------+--------+------+--------+------------+
+|      1 | bharat | engr |  50000 | 1980-12-17 |
++--------+--------+------+--------+------------+
+1 row in set (0.004 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+5. Display the department name and department number for departments with numbers greater than or equal to 20.
+
+MariaDB [assignment_4]> update trx set dept_no=25 where emp_no=4;
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> select*from trx;
++--------+-------+--------+---------------+--------+------------+---------+
+| name   | job   | salary | annual_salary | emp_no | hire_date  | dept_no |
++--------+-------+--------+---------------+--------+------------+---------+
+| bharat | engr  |  50000 |        700000 |      1 | 1980-12-17 |      20 |
+| patlu  | clerk |  10000 |        140000 |      2 | 1990-10-27 |      15 |
+| chotu  | mts   |   9800 |        125000 |      3 | 2000-05-07 |      10 |
+| raj    | dgm   | 120000 |       1700000 |      4 | 2005-05-12 |      25 |
++--------+-------+--------+---------------+--------+------------+---------+
+4 rows in set (0.000 sec)
+
+MariaDB [assignment_4]> select job,dept_no from trx where dept_no>=20;
++------+---------+
+| job  | dept_no |
++------+---------+
+| engr |      20 |
+| dgm  |      25 |
++------+---------+
+2 rows in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+6. Display the name, salary and commission of employees whose commission is greater than their salary.
+
+MariaDB [assignment_4]> alter table trx add commission int;
+Query OK, 0 rows affected (0.009 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [assignment_4]> desc trx;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| name          | varchar(20) | YES  |     | NULL    |       |
+| job           | varchar(20) | YES  |     | NULL    |       |
+| salary        | int(11)     | YES  |     | NULL    |       |
+| annual_salary | int(11)     | YES  |     | NULL    |       |
+| emp_no        | int(11)     | YES  |     | NULL    |       |
+| hire_date     | varchar(20) | YES  |     | NULL    |       |
+| dept_no       | int(11)     | YES  |     | NULL    |       |
+| commission    | int(11)     | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+8 rows in set (0.007 sec)
+
+MariaDB [assignment_4]> select*from trx;
++--------+-------+--------+---------------+--------+------------+---------+------------+
+| name   | job   | salary | annual_salary | emp_no | hire_date  | dept_no | commission |
++--------+-------+--------+---------------+--------+------------+---------+------------+
+| bharat | engr  |  50000 |        700000 |      1 | 1980-12-17 |      20 |       NULL |
+| patlu  | clerk |  10000 |        140000 |      2 | 1990-10-27 |      15 |       NULL |
+| chotu  | mts   |   9800 |        125000 |      3 | 2000-05-07 |      10 |       NULL |
+| raj    | dgm   | 120000 |       1700000 |      4 | 2005-05-12 |      25 |       NULL |
++--------+-------+--------+---------------+--------+------------+---------+------------+
+4 rows in set (0.000 sec)
+
+MariaDB [assignment_4]> update trx set commission=20000 where emp_no=1;
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> update trx set commission=1000 where emp_no=2;
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> update trx set commission=500 where emp_no=3;
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> update trx set commission=150000 where emp_no=4;
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> select name,salary,commission from trx where (commission>salary);
++------+--------+------------+
+| name | salary | commission |
++------+--------+------------+
+| raj  | 120000 |     150000 |
++------+--------+------------+
+1 row in set (0.001 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+7. Display the name, job title and salary of everyone hired during 1983.
+
+MariaDB [assignment_4]> update trx set hire_date='1983-12-17' where emp_no=1;
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> select name, job, salary, annual_salary from trx where hire_date like '1983%';
++--------+------+--------+---------------+
+| name   | job  | salary | annual_salary |
++--------+------+--------+---------------+
+| bharat | engr |  50000 |        700000 |
++--------+------+--------+---------------+
+1 row in set (0.002 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+8. Display the names of employees where salaries are less than 5500.
+
+MariaDB [assignment_4]> update trx set salary=4500 where emp_no=2;
+Query OK, 1 row affected (0.022 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> update trx set salary=3500 where emp_no=3;
+Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_4]> select name from trx where salary<5500;
++-------+
+| name  |
++-------+
+| patlu |
+| chotu |
++-------+
+2 rows in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+9. Display the names and employee numbers of managers who earn more than 7500.
+
+MariaDB [assignment_4]> select name, job, emp_no, salary from trx where salary>7500;
++--------+------+--------+--------+
+| name   | job  | emp_no | salary |
++--------+------+--------+--------+
+| bharat | engr |      1 |  50000 |
+| raj    | dgm  |      4 | 120000 |
++--------+------+--------+--------+
+2 rows in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+10. Display the information about managers and the president from the EMP table,order by department number.
+
+MariaDB [assignment_4]> select*from trx;
++--------+-------+--------+---------------+--------+------------+---------+------------+
+| name   | job   | salary | annual_salary | emp_no | hire_date  | dept_no | commission |
++--------+-------+--------+---------------+--------+------------+---------+------------+
+| bharat | engr  |  50000 |        700000 |      1 | 1983-12-17 |      20 |      20000 |
+| patlu  | clerk |   4500 |        140000 |      2 | 1990-10-27 |      15 |       1000 |
+| chotu  | mts   |   3500 |        125000 |      3 | 2000-05-07 |      10 |        500 |
+| raj    | dgm   | 120000 |       1700000 |      4 | 2005-05-12 |      25 |     150000 |
+| SSK    | HOD   | 150000 |       2400000 |      5 | 1988-02-03 |      30 |     300000 |
+| parti  | ceo   | 200000 |       3000000 |      6 | 1996-05-12 |      35 |     800000 |
+| bary   | VP    | 400000 |       6000000 |      7 | 2002-03-09 |      40 |    2000000 |
++--------+-------+--------+---------------+--------+------------+---------+------------+
+7 rows in set (0.005 sec)
+
+MariaDB [assignment_4]> select*from trx order by dept_no limit 3,4;
++-------+------+--------+---------------+--------+------------+---------+------------+
+| name  | job  | salary | annual_salary | emp_no | hire_date  | dept_no | commission |
++-------+------+--------+---------------+--------+------------+---------+------------+
+| raj   | dgm  | 120000 |       1700000 |      4 | 2005-05-12 |      25 |     150000 |
+| SSK   | HOD  | 150000 |       2400000 |      5 | 1988-02-03 |      30 |     300000 |
+| parti | ceo  | 200000 |       3000000 |      6 | 1996-05-12 |      35 |     800000 |
+| bary  | VP   | 400000 |       6000000 |      7 | 2002-03-09 |      40 |    2000000 |
++-------+------+--------+---------------+--------+------------+---------+------------+
+4 rows in set (0.001 sec)
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+11. Display all the employees whose name do not end with ‘S’
+
+MariaDB [assignment_4]> select name from trx where name not like'%s';
++--------+
+| name   |
++--------+
+| bharat |
+| patlu  |
+| chotu  |
+| raj    |
+| SSK    |
+| parti  |
+| bary   |
++--------+
+7 rows in set (0.000 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+12. Display all the employees whose name start with ‘C’.
+
+MariaDB [assignment_4]> select name from trx where name like'c%';
++-------+
+| name  |
++-------+
+| chotu |
++-------+
+1 row in set (0.000 sec)
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+13. Display the name, job and department of employees whose name falls in the alphabetical range ‘C’ to ‘L’.
+
+MariaDB [assignment_4]> select name, job, dept_no from trx where name between 'c%' and 'l%';
++-------+------+---------+
+| name  | job  | dept_no |
++-------+------+---------+
+| chotu | mts  |      10 |
++-------+------+---------+
+1 row in set (0.001 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+14. Display the employee details working in department 20, 30 or 40.
+
+MariaDB [assignment_4]> select*from trx where dept_no in(20,30,40);
++--------+------+--------+---------------+--------+------------+---------+------------+
+| name   | job  | salary | annual_salary | emp_no | hire_date  | dept_no | commission |
++--------+------+--------+---------------+--------+------------+---------+------------+
+| bharat | engr |  50000 |        700000 |      1 | 1983-12-17 |      20 |      20000 |
+| SSK    | HOD  | 150000 |       2400000 |      5 | 1988-02-03 |      30 |     300000 |
+| bary   | VP   | 400000 |       6000000 |      7 | 2002-03-09 |      40 |    2000000 |
++--------+------+--------+---------------+--------+------------+---------+------------+
+3 rows in set (0.001 sec)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+15. Display all the employees whose names start with ‘T’ and ends with ‘R’.
+
+MariaDB [assignment_4]> select name from trx where name like 't%r';
+Empty set (0.001 sec)
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------

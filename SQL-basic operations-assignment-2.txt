@@ -1,0 +1,124 @@
+
+eid	ename	esalary	  email	          dob
+1	XYZ	3000.89	  xyz@gmail.com	  1990-08-30
+2	ABC	2300.90	  abc@gmail.com	  1980-03-21
+
+
+1] Write Query to insert 1 Record in table that given in above table.
+
+2] Write Query to delete both records from the table in single query.
+
+3]Write Query to update esalary to 4000.68 and dob to 1993-08-30  of employee whose eid is 1 in a single query.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Answer with code:
+
+1)
+
+# mysql -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 10
+Server version: 10.4.24-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| assignment_1       |
+| assignment_2       |
+| att_2              |
+| attempt_1          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+9 rows in set (0.001 sec)
+
+MariaDB [(none)]> create database assignment_3;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> use assignment_3;
+Database changed
+MariaDB [assignment_3]> show tables;
+Empty set (0.000 sec)
+
+MariaDB [assignment_3]> create table emp(eid int, ename varchar(20), esalary float, email varchar(20), dob varchar(20));
+Query OK, 0 rows affected (0.027 sec)
+
+MariaDB [assignment_3]> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| eid     | int(11)     | YES  |     | NULL    |       |
+| ename   | varchar(20) | YES  |     | NULL    |       |
+| esalary | float       | YES  |     | NULL    |       |
+| email   | varchar(20) | YES  |     | NULL    |       |
+| dob     | varchar(20) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+5 rows in set (0.016 sec)
+
+MariaDB [assignment_3]> insert into emp values(1,'xyz',3000.89,'xyz@gmail.com','1990-08-30'),(2,'ABC',2300.90,'abc@gmail.com','1980-03-21');
+Query OK, 2 rows affected (0.004 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [assignment_3]> select*from emp;
++------+-------+---------+---------------+------------+
+| eid  | ename | esalary | email         | dob        |
++------+-------+---------+---------------+------------+
+|    1 | xyz   | 3000.89 | xyz@gmail.com | 1990-08-30 |
+|    2 | ABC   |  2300.9 | abc@gmail.com | 1980-03-21 |
++------+-------+---------+---------------+------------+
+2 rows in set (0.000 sec)
+
+MariaDB [assignment_3]> insert into emp values(3,'PQR',5000.43,'pqr@gmail.com','1985-05-12');
+Query OK, 1 row affected (0.003 sec)
+
+MariaDB [assignment_3]> select*from emp;
++------+-------+---------+---------------+------------+
+| eid  | ename | esalary | email         | dob        |
++------+-------+---------+---------------+------------+
+|    1 | xyz   | 3000.89 | xyz@gmail.com | 1990-08-30 |
+|    2 | ABC   |  2300.9 | abc@gmail.com | 1980-03-21 |
+|    3 | PQR   | 5000.43 | pqr@gmail.com | 1985-05-12 |
++------+-------+---------+---------------+------------+
+3 rows in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+2)
+
+MariaDB [assignment_3]> delete from emp where eid in(1,2);
+Query OK, 2 rows affected (0.003 sec)
+
+MariaDB [assignment_3]> select*from emp;
++------+-------+---------+---------------+------------+
+| eid  | ename | esalary | email         | dob        |
++------+-------+---------+---------------+------------+
+|    3 | PQR   | 5000.43 | pqr@gmail.com | 1985-05-12 |
++------+-------+---------+---------------+------------+
+1 row in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+3) here i updated eid=3 as i deleted eid in(1,2) for previous qsn
+
+MariaDB [assignment_3]> update emp set esalary=4000.68, dob='1993-08-30' where eid=3;
+Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [assignment_3]> select*from emp;
++------+-------+---------+---------------+------------+
+| eid  | ename | esalary | email         | dob        |
++------+-------+---------+---------------+------------+
+|    3 | PQR   | 4000.68 | pqr@gmail.com | 1993-08-30 |
++------+-------+---------+---------------+------------+
+1 row in set (0.000 sec)
+
+-----------------------------------------------------------------------------------------------------------------------------------
